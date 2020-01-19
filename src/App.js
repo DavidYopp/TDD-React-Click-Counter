@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -7,20 +6,50 @@ class App extends Component {
     super(props);
 
     this.state = {
-      counter: 0
+      counter: 0,
+      error: false,
     };
+
+    this.decrementCounter = this.decrementCounter.bind(this)
+    this.incrementCounter = this.incrementCounter.bind(this)
   }
+
+  decrementCounter() {
+    if (this.state.counter === 0) {
+      this.setState({ error: true });
+    } else {
+      this.setState({ counter: this.state.counter - 1 });
+    }
+  }
+
+  incrementCounter() {
+    if (this.state.error) {
+      this.setState({ error: false });
+    }
+    this.setState({ counter: this.state.counter + 1 });
+  }
+
   render() {
+    const errorClass = this.state.error ? '' : 'hidden';
+
     return (
       <div data-test="component-app" >
         <h1 data-test="counter-display">The counter is currently {this.state.counter}</h1>
+        <div data-test="error-message" className={`error ${errorClass}`}>
+          Error Cannot Decrement Below Zero!
+        </div>
         <button
           data-test="increment-button"
-          onClick={() => this.setState({ counter: this.state.counter + 1 })}
+          onClick={this.incrementCounter}
           >
           Increment counter
         </button>
-        <button data-test="decrement-button"></button>
+        <button
+          data-test="decrement-button"
+          onClick={this.decrementCounter}
+          >
+          Decrement counter
+        </button>
       </div>
     );
   }
